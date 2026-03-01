@@ -349,7 +349,34 @@
 </head>
 <body>
 
-
+    <div id="login-screen" style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    ">
+    <h1 style="font-size: 34px; font-weight: 700; margin-bottom: 8px;">My Wishlist</h1>
+    <p style="color: #8a8a8a; margin-bottom: 32px;">Sign in to continue</p>
+    <input type="email" id="email-input" placeholder="Email" style="
+        width: 100%; max-width: 320px; padding: 14px 16px; margin-bottom: 10px;
+        border: 2px solid #e8e4df; border-radius: 12px; font-size: 16px;
+        outline: none; background: #fff;
+    ">
+    <input type="password" id="password-input" placeholder="Password" style="
+        width: 100%; max-width: 320px; padding: 14px 16px; margin-bottom: 16px;
+        border: 2px solid #e8e4df; border-radius: 12px; font-size: 16px;
+        outline: none; background: #fff;
+    ">
+    <button id="login-btn" style="
+        width: 100%; max-width: 320px; padding: 14px; background: #e07a5f;
+        color: white; border: none; border-radius: 12px; font-size: 16px;
+        font-weight: 600; cursor: pointer;
+    ">Sign In</button>
+    <p id="login-error" style="color: #d44; margin-top: 12px; font-size: 14px;"></p>
+    </div>
+    <div id="app-screen" style="display: none;">
     <header>
         <div>
             <h1>
@@ -373,10 +400,38 @@
         <input type="text" id="wish-input" placeholder="Add a wish..." autocomplete="off">
         <button id="add-btn">Add</button>
     </div>
+    </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+        import {getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPEn1Gzqm_fLuVA2IWLW4L-HrW4Pa5yOM",
+            authDomain: "wishlist-5565d.firebaseapp.com",
+            projectId: "wishlist-5565d",
+            storageBucket: "wishlist-5565d.firebasestorage.app",
+            messagingSenderId: "922671254332",
+            appId: "1:922671254332:web:ef8b791e181d257bd2ac39",
+            measurementId: "G-FFL6N3T5PP"
+        };
 
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        //Login Screen Elements
+        const loginScreen = document.getElementById('login-screen');
+        const appScreen = document.getElementById('app-screen');
+        const emailInput = document.getElementById('email-input');
+        const passwordInput = document.getElementById('password-input');
+        const loginBtn = document.getElementById('login-btn');
+        const loginError = document.getElementById('login-error');
+
+        //App Elements
         const wishInput = document.getElementById('wish-input');
         const addBtn = document.getElementById('add-btn');
         const wishlistEl = document.getElementById('wishlist');
@@ -390,17 +445,38 @@
         const inputBar = document.getElementById('input-bar');
 
 
-        let wishes = JSON.parse(localStorage.getItem('wishes')) || [];
-        let completed = JSON.parse(localStorage.getItem('completed')) || [];
+        let wishes = [];
+        let completed = [];
         let currentView = 'wishlist';
+        let currentUser = null;
 
-        function saveWishes() {
-            localStorage.setItem('wishes', JSON.stringify(wishes));
+        async function saveWishes() {
+            await setDoc(doc(db, 'users', currentUser.uid, 'data', 'wishes'), {
+            wishes: wishes
+            });
         }
 
-        function saveCompleted() {
-            localStorage.setItem('completed', JSON.stringify(completed));
+        async function saveCompleted() {
+            await setDoc(doc(db, 'users', currentUser.uid, 'data', 'completed'), {
+            completed: completed
+            });
         }
+
+        async function loadData() {
+        const wishDoc = await getDoc(doc(db, 'users', currentUser.uid, 'data', 'wishes'));
+        if (wishDoc.exists()) {
+            wishes = wishDoc.data().wishes;
+            } else {
+            wishes = [];
+            }
+
+        const compDoc = await getDoc(doc(db, 'users', currentUser.uid, 'data', 'completed'));
+        if (compDoc.exists()) {
+            completed = compDoc.data().completed;
+            } else {
+            completed = [];
+            }
+        } 
 
         
         function renderWishes() {
@@ -424,8 +500,7 @@
                         <p>Your wishlist is empty.<br>Add something you'd love!</p>
                     </div>
                 `;
-                return;
-                
+                return;   
             }
 
             
@@ -533,7 +608,7 @@
             }
         }
 
-        function addWish() {
+        async function addWish() {
             const text = wishInput.value.trim();
             if (text === '') return;
 
@@ -544,11 +619,11 @@
             });
 
             wishInput.value = '';
-            saveWishes();
+            await saveWishes();
             renderWishes();
         }
 
-        function completeSelected() {
+        async function completeSelected() {
             const now = new Date();
             const dateStr = now.toLocaleDateString('en-GB', {
                 day: 'numeric',
@@ -570,18 +645,48 @@
             });
 
             wishes = stillActive;
-            saveWishes();
-            saveCompleted();
+            await saveWishes();
+            await saveCompleted();
             renderWishes();
         }
 
-        function deselectAll() {
+        async function deselectAll() {
             wishes.forEach(function(wish) {
                 wish.selected = false;
             });
-            saveWishes();
+            await saveWishes();
             renderWishes();
         }
+        
+        loginBtn.addEventListener('click', async function() {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        loginError.textContent = '';
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+            loginError.textContent = 'Invalid email or password';
+            }
+        });
+        
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') loginBtn.click();
+        });
+
+        onAuthStateChanged(auth, async function(user) {
+        if (user) {
+            currentUser = user;
+            loginScreen.style.display = 'none';
+            appScreen.style.display = 'block';
+            await loadData();
+            renderWishes();
+            } else {
+            currentUser = null;
+            loginScreen.style.display = 'flex';
+            appScreen.style.display = 'none';
+            }
+        });
 
         addBtn.addEventListener('click', addWish);
         wishInput.addEventListener('keypress', function(e) {
@@ -592,39 +697,6 @@
         historyLink.addEventListener('click', function() {
             switchView(currentView === 'wishlist' ? 'history' : 'wishlist');
         });
-
-        renderWishes();
-
-
-        /*
-            ============================================================
-            CONGRATULATIONS! You now understand the basics of:
-
-            1. HTML  — Structuring content (<div>, <button>, <input>)
-            2. CSS   — Styling it (colors, spacing, animations)
-            3. JS    — Making it interactive (events, functions, data)
-
-            THINGS TO TRY NEXT (exercises!):
-            --------------------------------------------------------
-            Easy:
-            - Change the accent colour (find --accent in the CSS)
-            - Change the emoji in the empty state
-            - Change the placeholder text in the input
-
-            Medium:
-            - Add a "notes" field (a second input for each wish)
-            - Add categories (e.g. "Tech", "Books", "Travel")
-            - Add a price/cost field
-
-            Harder:
-            - Add the ability to edit an existing wish
-            - Add drag-to-reorder
-            - Add a "share" button that copies the list as text
-
-            Have fun and experiment! You can't break anything
-            permanently — the worst case is you refresh the page.
-            ============================================================
-        */
     </script>
 
 </body>
