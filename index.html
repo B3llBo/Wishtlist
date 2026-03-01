@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <title>Fistiks Wishlist</title>
-
 
     <style>
         :root {
@@ -31,7 +29,6 @@
             box-sizing: border-box;
         }
 
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: var(--bg);
@@ -40,9 +37,7 @@
             padding: 0 20px 100px 20px;
         }
 
-        /*
-            HEADER
-        */
+        /* ---- HEADER ---- */
         header {
             padding: 60px 0 16px 0;
             display: flex;
@@ -74,7 +69,7 @@
             margin-top: 4px;
         }
 
-        .history-link {
+        .header-btn {
             background: none;
             border: none;
             color: var(--accent);
@@ -86,8 +81,16 @@
             white-space: nowrap;
         }
 
-        .history-link:hover {
+        .header-btn:hover {
             color: var(--accent-hover);
+        }
+
+        /* ---- NAV BUTTONS (right side of header) ---- */
+        .header-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
         }
 
         /* ---- COMPLETE BAR ---- */
@@ -139,20 +142,6 @@
             color: var(--text);
         }
 
-        .history-item.delete-btn {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 0 4px;
-            opacity: 0.4;
-            transition: opacity 0.2s ease, color 0.2s ease;
-        }
-        .history-item .delete-btn:hover {
-            opacity: 1;
-            color: #d44;
-        }
         /* ---- WISHLIST ITEMS ---- */
         .wishlist {
             margin-top: 16px;
@@ -217,6 +206,12 @@
             font-weight: 600;
         }
 
+        .wish-item .wish-text p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 3px;
+        }
+
         .wish-item .delete-btn {
             background: none;
             border: none;
@@ -278,6 +273,7 @@
             background: var(--accent-hover);
         }
 
+        /* ---- EMPTY STATE ---- */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -289,6 +285,7 @@
             margin-bottom: 12px;
         }
 
+        /* ---- HISTORY ITEMS ---- */
         .history-item {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -314,6 +311,10 @@
             margin-top: 1px;
         }
 
+        .history-item .wish-text {
+            flex: 1;
+        }
+
         .history-item .wish-text h3 {
             font-size: 16px;
             font-weight: 600;
@@ -324,10 +325,6 @@
             font-size: 13px;
             color: var(--text-light);
             margin-top: 3px;
-        }
-
-        .history-item .wish-text {
-            flex: 1;
         }
 
         .history-item .restore-btn {
@@ -345,68 +342,296 @@
         .history-item .restore-btn:hover {
             opacity: 0.7;
         }
+
+        .history-item .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 4px;
+            opacity: 0.4;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .history-item .delete-btn:hover {
+            opacity: 1;
+            color: #d44;
+        }
+
+        /* ---- WISHLIST CARDS (home screen) ----
+           These are the cards on the home screen that represent
+           each wishlist. Tapping one opens that wishlist.
+        */
+        .list-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: slideIn 0.3s ease-out;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.15s ease;
+            border: 2px solid transparent;
+        }
+
+        .list-card:active {
+            transform: scale(0.98);
+            /* A subtle "press" effect when you tap on mobile */
+        }
+
+        .list-card:hover {
+            border-color: var(--border);
+        }
+
+        .list-card .list-icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 12px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .list-card .list-info {
+            flex: 1;
+        }
+
+        .list-card .list-info h3 {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .list-card .list-info p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .list-card .list-arrow {
+            color: var(--text-light);
+            font-size: 20px;
+        }
+
+        .list-card .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 12px 14px;
+            margin: -12px -10px -12px 0;
+            opacity: 0.4;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .list-card .delete-btn:hover {
+            opacity: 1;
+            color: #d44;
+        }
+
+        .list-card .rename-btn { 
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 12px 14px;
+            margin: -12px 0;
+            opacity: 0.4;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .list-card .rename-btn:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        /* ---- MODAL (for naming a new wishlist) ----
+           A modal is a popup that appears on top of everything.
+           The overlay darkens the background to focus attention.
+        */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.2s ease-out;
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            background: var(--bg);
+            outline: none;
+            margin-bottom: 16px;
+            transition: border-color 0.2s ease;
+        }
+
+        .modal input:focus {
+            border-color: var(--accent);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-buttons .modal-cancel {
+            background: none;
+            border: 2px solid var(--border);
+            color: var(--text-light);
+        }
+
+        .modal-buttons .modal-confirm {
+            background: var(--accent);
+            border: none;
+            color: white;
+        }
+
+        .modal-buttons .modal-confirm:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Sign out link - small and subtle */
+        .signout-link {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 13px;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .signout-link:hover {
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
 
     <div id="login-screen" style="
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-    ">
-    <h1 style="font-size: 34px; font-weight: 700; margin-bottom: 8px;">My Wishlist</h1>
-    <p style="color: #8a8a8a; margin-bottom: 32px;">Sign in to continue</p>
-    <input type="email" id="email-input" placeholder="Email" style="
-        width: 100%; max-width: 320px; padding: 14px 16px; margin-bottom: 10px;
-        border: 2px solid #e8e4df; border-radius: 12px; font-size: 16px;
-        outline: none; background: #fff;
-    ">
-    <input type="password" id="password-input" placeholder="Password" style="
-        width: 100%; max-width: 320px; padding: 14px 16px; margin-bottom: 16px;
-        border: 2px solid #e8e4df; border-radius: 12px; font-size: 16px;
-        outline: none; background: #fff;
-    ">
-    <button id="login-btn" style="
-        width: 100%; max-width: 320px; padding: 14px; background: #e07a5f;
-        color: white; border: none; border-radius: 12px; font-size: 16px;
-        font-weight: 600; cursor: pointer;
-    ">Sign In</button>
-    <p id="login-error" style="color: #d44; margin-top: 12px; font-size: 14px;"></p>
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        ">
+        <h1 style="font-size: 34px; font-weight: 700; margin-bottom: 8px;">Fistik Wishlist</h1>
+        <p style="color: #8a8a8a; margin-bottom: 32px;">Sign in to continue</p>
+        <input type="email" id="email-input" placeholder="Email" style="
+            width: 100%; max-width: 320px; padding: 14px 16px; margin-bottom: 10px;
+            border: 2px solid #e8e4df; border-radius: 12px; font-size: 16px;
+            outline: none; background: #fff;
+        ">
+        <input type="password" id="password-input" placeholder="Password" style="
+            width: 100%; max-width: 320px; padding: 14px 16px; margin-bottom: 16px;
+            border: 2px solid #e8e4df; border-radius: 12px; font-size: 16px;
+            outline: none; background: #fff;
+        ">
+        <button id="login-btn" style="
+            width: 100%; max-width: 320px; padding: 14px; background: #e07a5f;
+            color: white; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 600; cursor: pointer;
+        ">Sign In</button>
+        <p id="login-error" style="color: #d44; margin-top: 12px; font-size: 14px;"></p>
     </div>
+
     <div id="app-screen" style="display: none;">
-    <header>
-        <div>
-            <h1>
-                <span id="page-title">Fistik Wishlist</span>
-                <span class="count" id="item-count">0</span>
-            </h1>
-            <p id="page-subtitle">Things to remember</p>
+
+        <header>
+            <div>
+                <h1>
+                    <span id="page-title">My Lists</span>
+                    <span class="count" id="item-count">0</span>
+                </h1>
+                <p id="page-subtitle">Your wishlists</p>
+            </div>
+            <div class="header-nav">
+                
+                <button class="header-btn" id="nav-btn-1" style="display: none;">History</button>
+                <button class="header-btn" id="nav-btn-2" style="display: none;">&larr; Lists</button>
+                <button class="signout-link" id="signout-btn">Sign out</button>
+            </div>
+        </header>
+
+        <div class="wishlist" id="content-area"></div>
+
+        <div class="complete-bar" id="complete-bar">
+            <button class="complete-btn" id="complete-btn">Complete Selected</button>
+            <button class="deselect-btn" id="deselect-btn">Cancel</button>
         </div>
-        <button class="history-link" id="history-link">History</button>
-    </header>
 
-    <div class="wishlist" id="wishlist"></div>
+        <div class="input-bar" id="input-bar" style="display: none;">
+            <input type="text" id="wish-input" placeholder="Add a wish..." autocomplete="off">
+            <button id="add-btn">Add</button>
+        </div>
 
-    <!-- Complete bar — hidden by default, shown when items are selected -->
-    <div class="complete-bar" id="complete-bar">
-        <button class="complete-btn" id="complete-btn">Complete Selected</button>
-        <button class="deselect-btn" id="deselect-btn">Cancel</button>
+        <div class="input-bar" id="list-input-bar">
+            <input type="text" id="list-name-input" placeholder="New list name..." autocomplete="off">
+            <button id="add-list-btn">Create</button>
+        </div>
     </div>
 
-    <div class="input-bar" id="input-bar">
-        <input type="text" id="wish-input" placeholder="Add a wish..." autocomplete="off">
-        <button id="add-btn">Add</button>
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h2 id="modal-title">Rename List</h2>
+            <input type="text" id="modal-input" placeholder="List name...">
+            <div class="modal-buttons">
+                <button class="modal-cancel" id="modal-cancel">Cancel</button>
+                <button class="modal-confirm" id="modal-confirm">Save</button>
+            </div>
+        </div>
     </div>
-    </div>
+
 
     <script type="module">
+        // ---- FIREBASE SETUP ----
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-        import {getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAPEn1Gzqm_fLuVA2IWLW4L-HrW4Pa5yOM",
@@ -419,11 +644,11 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        //Login Screen Elements
+
+        // ---- ELEMENT REFERENCES ----
         const loginScreen = document.getElementById('login-screen');
         const appScreen = document.getElementById('app-screen');
         const emailInput = document.getElementById('email-input');
@@ -431,60 +656,203 @@
         const loginBtn = document.getElementById('login-btn');
         const loginError = document.getElementById('login-error');
 
-        //App Elements
-        const wishInput = document.getElementById('wish-input');
-        const addBtn = document.getElementById('add-btn');
-        const wishlistEl = document.getElementById('wishlist');
+        const contentArea = document.getElementById('content-area');
         const itemCount = document.getElementById('item-count');
         const completeBar = document.getElementById('complete-bar');
         const completeBtn = document.getElementById('complete-btn');
         const deselectBtn = document.getElementById('deselect-btn');
-        const historyLink = document.getElementById('history-link');
         const pageTitle = document.getElementById('page-title');
         const pageSubtitle = document.getElementById('page-subtitle');
         const inputBar = document.getElementById('input-bar');
+        const wishInput = document.getElementById('wish-input');
+        const addBtn = document.getElementById('add-btn');
+        const listInputBar = document.getElementById('list-input-bar');
+        const listNameInput = document.getElementById('list-name-input');
+        const addListBtn = document.getElementById('add-list-btn');
+        const navBtn1 = document.getElementById('nav-btn-1');
+        const navBtn2 = document.getElementById('nav-btn-2');
+        const signoutBtn = document.getElementById('signout-btn');
 
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalInput = document.getElementById('modal-input');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalConfirm = document.getElementById('modal-confirm');
 
-        let wishes = [];
-        let completed = [];
-        let currentView = 'wishlist';
         let currentUser = null;
+        let currentView = 'home';       // 'home', 'wishes', or 'history'
+        let allLists = [];               // array of { id, name, wishes, completed, createdAt }
+        let activeListId = null;         // which wishlist is currently open
+        let modalCallback = null;        // function to call when modal is confirmed
 
-        async function saveWishes() {
-            await setDoc(doc(db, 'users', currentUser.uid, 'data', 'wishes'), {
-            wishes: wishes
+        function getActiveList() {
+            return allLists.find(function(list) {
+                return list.id === activeListId;
             });
         }
 
-        async function saveCompleted() {
-            await setDoc(doc(db, 'users', currentUser.uid, 'data', 'completed'), {
-            completed: completed
+        async function loadAllLists() {
+            const colRef = collection(db, 'users', currentUser.uid, 'wishlists');
+            const snapshot = await getDocs(colRef);
+            /*
+                getDocs returns a "snapshot" of all documents in the collection.
+                We loop through it and build our allLists array.
+                Each doc has .id (the document ID) and .data() (the contents).
+            */
+            allLists = [];
+            snapshot.forEach(function(docSnap) {
+                const data = docSnap.data();
+                allLists.push({
+                    id: docSnap.id,
+                    name: data.name || 'Untitled',
+                    wishes: data.wishes || [],
+                    completed: data.completed || [],
+                    createdAt: data.createdAt || ''
+                });
+            });
+            allLists.sort(function(a, b) {
+                return b.createdAt.localeCompare(a.createdAt);
             });
         }
 
-        async function loadData() {
-        const wishDoc = await getDoc(doc(db, 'users', currentUser.uid, 'data', 'wishes'));
-        if (wishDoc.exists()) {
-            wishes = wishDoc.data().wishes;
-            } else {
-            wishes = [];
+        async function saveList(list) {
+            await setDoc(doc(db, 'users', currentUser.uid, 'wishlists', list.id), {
+                name: list.name,
+                wishes: list.wishes,
+                completed: list.completed,
+                createdAt: list.createdAt
+            });
+        }
+
+        async function createNewList(name) {
+            /*
+                We generate a unique ID using the current timestamp.
+                Date.now() returns milliseconds since 1970 — guaranteed
+                to be unique unless you create two lists in the same
+                millisecond (which won't happen with a human clicking).
+            */
+            const id = 'list_' + Date.now();
+            const newList = {
+                id: id,
+                name: name,
+                wishes: [],
+                completed: [],
+                createdAt: new Date().toISOString()
+            };
+            allLists.unshift(newList);
+            await saveList(newList);
+            return newList;
+        }
+
+        async function deleteList(listId) {
+            await deleteDoc(doc(db, 'users', currentUser.uid, 'wishlists', listId));
+            allLists = allLists.filter(function(list) {
+                return list.id !== listId;
+            });
+        }
+
+        function showModal(title, currentValue, callback) {
+            modalTitle.textContent = title;
+            modalInput.value = currentValue;
+            modalCallback = callback;
+            modalOverlay.classList.add('visible');
+            modalInput.focus();
+        }
+
+        function renderHome() {
+            currentView = 'home';
+            activeListId = null;
+            contentArea.innerHTML = '';
+
+            pageTitle.textContent = 'My Lists';
+            pageSubtitle.textContent = 'Your wishlists';
+            itemCount.textContent = allLists.length;
+
+            listInputBar.style.display = 'flex';
+            inputBar.style.display = 'none';
+            completeBar.classList.remove('visible');
+            navBtn1.style.display = 'none';
+            navBtn2.style.display = 'none';
+
+            if (allLists.length === 0) {
+                contentArea.innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">📝</div>
+                        <p>No wishlists yet.<br>Create one below!</p>
+                    </div>
+                `;
+                return;
             }
 
-        const compDoc = await getDoc(doc(db, 'users', currentUser.uid, 'data', 'completed'));
-        if (compDoc.exists()) {
-            completed = compDoc.data().completed;
-            } else {
-            completed = [];
-            }
-        } 
+            allLists.forEach(function(list) {
+                const card = document.createElement('div');
+                card.className = 'list-card';
 
-        
+                const wishCount = list.wishes.length;
+                const doneCount = list.completed.length;
+
+                card.innerHTML = `
+                    <div class="list-icon">📋</div>
+                    <div class="list-info">
+                        <h3>${list.name}</h3>
+                        <p>${wishCount} wish${wishCount !== 1 ? 'es' : ''}${doneCount > 0 ? ' · ' + doneCount + ' completed' : ''}</p>
+                    </div>
+                    
+                    <button class="rename-btn" title="Rename list">✎</button>
+                    <button class="delete-btn" title="Delete list">&times;</button>
+                    <span class="list-arrow">›</span>
+                `;
+
+                // Clicking the card opens that wishlist
+                card.addEventListener('click', function() {
+                    activeListId = list.id;
+                    renderWishes();
+                });
+
+                // Delete button — stops the click from also opening the list
+                card.querySelector('.delete-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (confirm('Delete "' + list.name + '" and all its wishes?')) {
+                        deleteList(list.id).then(function() {
+                            renderHome();
+                        });
+                    }
+                });
+                card.querySelector('.rename-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showModal('Rename List', list.name, async function(newName) {
+                    list.name = newName;
+                    await saveList(list);
+                    renderHome();
+                    });
+                });              
+                contentArea.appendChild(card);
+            });
+        }
+
+        // ---- RENDER: WISHES VIEW ----
         function renderWishes() {
-            wishlistEl.innerHTML = '';
-            const selectedCount = wishes.filter(function(w) {
+            currentView = 'wishes';
+            const list = getActiveList();
+            if (!list) return;
+
+            contentArea.innerHTML = '';
+
+            pageTitle.textContent = list.name;
+            pageSubtitle.textContent = 'Things to remember';
+            itemCount.textContent = list.wishes.length;
+
+            // Show wish input, hide list input
+            inputBar.style.display = 'flex';
+            listInputBar.style.display = 'none';
+            navBtn1.textContent = 'History';
+            navBtn1.style.display = 'block';
+            navBtn2.textContent = '\u2190 Lists';
+            navBtn2.style.display = 'block';
+
+            const selectedCount = list.wishes.filter(function(w) {
                 return w.selected;
             }).length;
-            itemCount.textContent = wishes.length;
 
             if (selectedCount > 0) {
                 completeBar.classList.add('visible');
@@ -492,61 +860,75 @@
             } else {
                 completeBar.classList.remove('visible');
             }
-          
-            if (wishes.length === 0) {
-                wishlistEl.innerHTML = `
+
+            if (list.wishes.length === 0) {
+                contentArea.innerHTML = `
                     <div class="empty-state">
                         <div class="emoji">✨</div>
-                        <p>Your wishlist is empty.<br>Add something you'd love!</p>
+                        <p>This list is empty.<br>Add something you'd love!</p>
                     </div>
                 `;
-                return;   
+                return;
             }
 
-            
-            wishes.forEach(function(wish, index) {
+            list.wishes.forEach(function(wish, index) {
                 const item = document.createElement('div');
                 item.className = 'wish-item' + (wish.selected ? ' selected' : '');
-              
+
                 item.innerHTML = `
-                    <button class="select-btn" title="Mark as done"></button>
+                    <button class="select-btn">✓</button>
                     <div class="wish-text">
                         <h3>${wish.text}</h3>
-                        ${wish.note ? '<p>' + wish.note + '</p>' : ''}
                     </div>
                     <button class="delete-btn" title="Remove">&times;</button>
                 `;
 
                 item.querySelector('.select-btn').addEventListener('click', function(e) {
                     e.stopPropagation();
-                    wishes[index].selected = !wishes[index].selected;
-                    saveWishes();
+                    list.wishes[index].selected = !list.wishes[index].selected;
+                    saveList(list);
                     renderWishes();
                 });
 
                 item.addEventListener('click', function() {
-                    wishes[index].selected = !wishes[index].selected;
-                    saveWishes();
+                    list.wishes[index].selected = !list.wishes[index].selected;
+                    saveList(list);
                     renderWishes();
                 });
 
                 item.querySelector('.delete-btn').addEventListener('click', function(e) {
                     e.stopPropagation();
-                    wishes.splice(index, 1);
-                    saveWishes();
+                    list.wishes.splice(index, 1);
+                    saveList(list);
                     renderWishes();
                 });
 
-                wishlistEl.appendChild(item);
+                contentArea.appendChild(item);
             });
         }
 
+        // ---- RENDER: HISTORY VIEW ----
         function renderHistory() {
-            wishlistEl.innerHTML = '';
-            itemCount.textContent = completed.length;
+            currentView = 'history';
+            const list = getActiveList();
+            if (!list) return;
 
-            if (completed.length === 0) {
-                wishlistEl.innerHTML = `
+            contentArea.innerHTML = '';
+
+            pageTitle.textContent = 'History';
+            pageSubtitle.textContent = 'Completed from ' + list.name;
+            itemCount.textContent = list.completed.length;
+
+            inputBar.style.display = 'none';
+            listInputBar.style.display = 'none';
+            completeBar.classList.remove('visible');
+            navBtn1.textContent = '\u2190 Back';
+            navBtn1.style.display = 'block';
+            navBtn2.textContent = '\u2190 Lists';
+            navBtn2.style.display = 'block';
+
+            if (list.completed.length === 0) {
+                contentArea.innerHTML = `
                     <div class="empty-state">
                         <div class="emoji">📭</div>
                         <p>No completed wishes yet.<br>Get after it!</p>
@@ -555,7 +937,7 @@
                 return;
             }
 
-            completed.forEach(function(wish, index) {
+            list.completed.forEach(function(wish, index) {
                 const item = document.createElement('div');
                 item.className = 'history-item';
 
@@ -570,60 +952,55 @@
                 `;
 
                 item.querySelector('.restore-btn').addEventListener('click', function() {
-                    const restored = completed.splice(index, 1)[0];
-                    wishes.unshift({
+                    const restored = list.completed.splice(index, 1)[0];
+                    list.wishes.unshift({
                         text: restored.text,
                         selected: false
                     });
-                    saveWishes();
-                    saveCompleted();
-                    renderHistory();
-                });
-                item.querySelector('.delete-btn').addEventListener('click', function() {
-                    completed.splice(index, 1);
-                    saveCompleted();
+                    saveList(list);
                     renderHistory();
                 });
 
-                wishlistEl.appendChild(item);
+                item.querySelector('.delete-btn').addEventListener('click', function() {
+                    list.completed.splice(index, 1);
+                    saveList(list);
+                    renderHistory();
+                });
+
+                contentArea.appendChild(item);
             });
         }
 
-        function switchView(view) {
-            currentView = view;
-
-            if (view === 'history') {
-                pageTitle.textContent = 'History';
-                pageSubtitle.textContent = 'Wishes you\'ve completed';
-                historyLink.textContent = '\u2190 Back';
-                inputBar.style.display = 'none';
-                completeBar.classList.remove('visible');
-                renderHistory();
-            } else {
-                pageTitle.textContent = 'Fistik Wishlist';
-                pageSubtitle.textContent = 'Things I want to remember';
-                historyLink.textContent = 'History';
-                inputBar.style.display = 'flex';
-                renderWishes();
-            }
-        }
-
+        // ---- ACTION FUNCTIONS ----
         async function addWish() {
             const text = wishInput.value.trim();
             if (text === '') return;
+            const list = getActiveList();
+            if (!list) return;
 
-            wishes.unshift({
+            list.wishes.unshift({
                 text: text,
-                note: '',       
-                selected : false
+                selected: false
             });
 
             wishInput.value = '';
-            await saveWishes();
+            await saveList(list);
             renderWishes();
         }
 
+        async function addNewList() {
+            const name = listNameInput.value.trim();
+            if (name === '') return;
+
+            listNameInput.value = '';
+            await createNewList(name);
+            renderHome();
+        }
+
         async function completeSelected() {
+            const list = getActiveList();
+            if (!list) return;
+
             const now = new Date();
             const dateStr = now.toLocaleDateString('en-GB', {
                 day: 'numeric',
@@ -632,10 +1009,9 @@
             });
 
             const stillActive = [];
-
-            wishes.forEach(function(wish) {
+            list.wishes.forEach(function(wish) {
                 if (wish.selected) {
-                    completed.unshift({
+                    list.completed.unshift({
                         text: wish.text,
                         completedDate: dateStr
                     });
@@ -644,59 +1020,119 @@
                 }
             });
 
-            wishes = stillActive;
-            await saveWishes();
-            await saveCompleted();
+            list.wishes = stillActive;
+            await saveList(list);
             renderWishes();
         }
 
         async function deselectAll() {
-            wishes.forEach(function(wish) {
+            const list = getActiveList();
+            if (!list) return;
+
+            list.wishes.forEach(function(wish) {
                 wish.selected = false;
             });
-            await saveWishes();
+            await saveList(list);
             renderWishes();
         }
-        
-        loginBtn.addEventListener('click', async function() {
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        loginError.textContent = '';
 
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-            loginError.textContent = 'Invalid email or password';
+        // ---- NAVIGATION ----
+
+        navBtn1.addEventListener('click', function() {
+            if (currentView === 'wishes') {
+                renderHistory();
+            } else if (currentView === 'history') {
+                renderWishes();
             }
         });
-        
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') loginBtn.click();
+
+        navBtn2.addEventListener('click', function() {
+            renderHome();
         });
 
-        onAuthStateChanged(auth, async function(user) {
-        if (user) {
-            currentUser = user;
-            loginScreen.style.display = 'none';
-            appScreen.style.display = 'block';
-            await loadData();
-            renderWishes();
-            } else {
-            currentUser = null;
-            loginScreen.style.display = 'flex';
-            appScreen.style.display = 'none';
-            }
-        });
+
+        // ---- EVENT LISTENERS ----
 
         addBtn.addEventListener('click', addWish);
         wishInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') addWish();
         });
+
+        addListBtn.addEventListener('click', addNewList);
+        listNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addNewList();
+        });
+
         completeBtn.addEventListener('click', completeSelected);
         deselectBtn.addEventListener('click', deselectAll);
-        historyLink.addEventListener('click', function() {
-            switchView(currentView === 'wishlist' ? 'history' : 'wishlist');
+
+        signoutBtn.addEventListener('click', function() {
+            signOut(auth);
         });
+
+        // Modal cancel
+        modalCancel.addEventListener('click', function() {
+            modalOverlay.classList.remove('visible');
+            modalCallback = null;
+        });
+
+        modalConfirm.addEventListener('click', function() {
+            const value = modalInput.value.trim();
+            if (value !== '' && modalCallback) {
+                modalCallback(value);
+            }
+            modalOverlay.classList.remove('visible');
+            modalCallback = null;
+        });
+
+        modalInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') modalConfirm.click();
+        });
+
+        // ---- AUTH ----
+
+        loginBtn.addEventListener('click', async function() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            loginError.textContent = '';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                loginError.textContent = 'Invalid email or password';
+            }
+        });
+
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') loginBtn.click();
+        });
+
+        onAuthStateChanged(auth, async function(user) {
+            if (user) {
+                currentUser = user;
+                loginScreen.style.display = 'none';
+                appScreen.style.display = 'block';
+                await loadAllLists();
+                renderHome();
+            } else {
+                currentUser = null;
+                allLists = [];
+                activeListId = null;
+                loginScreen.style.display = 'flex';
+                appScreen.style.display = 'none';
+            }
+        });
+
+
+        /*
+            EXERCISES:
+            - Add the ability to rename a list (hint: use the modal)
+            - Add emoji picker for list icons
+            - Add a shared list feature so you and your partner
+              can collaborate on the same list
+            - Add sorting (by date, alphabetical, etc.)
+            ============================================================
+        */
     </script>
 
 </body>
